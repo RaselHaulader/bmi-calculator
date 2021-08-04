@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI</title>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, rgba(196, 85, 211, 0.767), rgba(67, 132, 253, 0.904));
+        }
+
+        form,
+        h2,
+        h3 {
+            text-align: center;
+        }
+
+        .form-container {
+            padding: 30px;
+            color: whitesmoke;
+            border-radius: 20px;
+            width: 70%;
+            background: linear-gradient(45deg, rgb(57, 26, 233), rgb(144, 43, 212));
+        }
+
+        input {
+            border: none;
+            color: wheat;
+            background-color: transparent;
+            border-bottom: 2px solid rgb(222, 227, 230);
+        }
+
+        input::placeholder {
+            color: rgb(155, 232, 255);
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        .result-section {
+            text-align: center;
+        }
+
+        button {
+            border: none;
+            border-radius: 15px;
+            padding: 5px 10px;
+            background-color: rgba(25, 58, 150, 0.521);
+            color: rgb(179, 224, 255);
+        }
+
+        #warning {
+            text-align: center;
+        }
+
+        #warning {
+            color: rgb(255, 60, 53);
+        }
+
+        #back {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h3 id="header">শরীর অনুযায়ী ওজন ঠিক আছে কিনা দেখে নিন।</h3>
+        <form id="form">
+            <input id="name" placeholder="আপনার নাম" required type="text"><br><br>
+            <input id="kg" required placeholder="ওজন (কে.জি)" type="number"><br><br>
+            <input id="ft" required style="width: 93px;" placeholder="উচ্চতা (ফুট)" type="number"> : <input id="inch"
+                style="width: 50px;" placeholder="ইঞ্চি" type="number"><br><br>
+            <Button onclick="handleSubmit()">Check</Button> <button type="reset">Reset</button>
+            <p id="warning"></p>
+        </form>
+        <div id="r-display" class="result-section">
+            <h2 id="name2"></h2>
+            <p class="result"></p>
+            <p id="condition"></p>
+            <button id="back" onclick="back()">Back</button>
+        </div>
+    </div>
+    <script>
+        function handleSubmit() {
+            event.preventDefault();
+            var name = document.getElementById('name').value;
+            var kg = document.getElementById('kg').value;
+            var ft = document.getElementById('ft').value;
+            var inch = document.getElementById('inch').value;
+            //conver to meter
+            var ftConverte = ft / 3.281;
+            var inchConverte = inch / 39.37;
+            var height = ftConverte + inchConverte;
+            //apply bmi formula
+            var bmi = kg / (height * height);
+            bmi = bmi.toFixed(1);
+            console.log(bmi)
+            
+            if (name && kg && ft) {
+
+                if (bmi < 15) {
+                    condition = `আপনার ওজন ( ${kg} kg ) উচ্চতা ( ${ft} ft ${(inch ? `${inch} inch` : '')} ) অনুযায়ী আপনার ওজন অতিরিক্ত কম আছে দ্রুত বাড়ানোর চষ্টা করুন। ` // + "আপনার ওজন ( " + kg + " k.g " + " ) উচ্চতা ( " + ft + " ft " + (inch ? inch + "inch" : '' ) + " ) অনুযায়ী  ওজন " + "  কম আছে বাড়াতে হবে ।"
+                }
+                else if(bmi < 18.5){
+                    condition = `আপনার ওজন ( ${kg} kg ) উচ্চতা ( ${ft} ft ${(inch ? `${inch} inch` : '')} ) অনুযায়ী আপনার ওজন কম আছে বাড়াতে হবে। ` // + "আপনার ওজন ( " + kg + " k.g " + " ) উচ্চতা ( " + ft + " ft " + (inch ? inch + "inch" : '' ) + " ) অনুযায়ী  ওজন " + "  কম আছে বাড়াতে হবে ।"
+                }
+                else if (bmi < 25) {
+                    var condition =  `আপনার ওজন ( ${kg} kg ) উচ্চতা ( ${ft} ft ${(inch ? `${inch} inch` : '')} ) অনুযায়ী আপনার ওজন স্বাভাবিক আছে। `//" আপনার ওজন ( " + kg + " k.g " + " ) উচ্চতা ( " + ft + " ft " + inch_M + " ) অনুযায়ী ওজন   স্বাভাবিক আছে ।   "
+                } else if (bmi < 30) {
+                    condition =  `আপনার ওজন ( ${kg} kg ) উচ্চতা ( ${ft} ft ${(inch ? `${inch} inch` : '')} ) অনুযায়ী আপনার ওজন বেশী আছে কমাতে হবে। `//"আপনার ওজন ( " + kg + " k.g " + " ) উচ্চতা ( " + ft + " ft " + inch_M + " ) অনুযায়ী  ওজন " + "   বেড়ে গেছে কমানোর চেষ্টা করুন ।"
+                } else if (bmi > 29.9) {
+                    condition =  `আপনার ওজন ( ${kg} kg ) উচ্চতা ( ${ft} ft ${(inch ? `${inch} inch` : '')} ) অনুযায়ী আপনার ওজন  অতিরিক্ত বেড়ে গেছে যত দ্রুত সম্ভব কমানোর চেষ্টা করুন । `//"আপনার ওজন ( " + kg + " k.g " + " ) উচ্চতা ( " + ft + " ft " + inch_M + " ) অনুযায়ী  ওজন " + "   অতিরিক্ত বেড়ে গেছে যত দ্রুত সম্ভব কমানোর চেষ্টা করুন ।"
+                }
+                console.log(bmi)
+                document.getElementById("form").style.display = "none";
+                document.getElementById("header").style.display = "none";
+                document.getElementById("back").style.display = "inline-block";
+                document.getElementById("r-display").style.display = "block";
+                document.getElementById('name2').innerHTML = `স্বাগতম ${name}`
+                document.getElementsByClassName('result')[0].innerHTML = "আপনার BMI : " + bmi;
+                document.getElementById('condition').innerHTML = condition
+                document.getElementById('warning').innerHTML = ""
+            } else {
+                document.getElementById('warning').innerHTML = "সব গুলো ঘর পূরন করুন!!"
+            }
+        };
+        function back() {
+            document.getElementById("r-display").style.display = "none";
+            document.getElementById("form").style.display = "block";
+            document.getElementById("header").style.display = "block";
+        }
+    </script>
+</body>
+
+</html>
